@@ -8,9 +8,17 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 get_filename_component(PROJECTMYTHOS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
 
-set(ENGINE_CORE_ROOT "${PROJECTMYTHOS_ROOT}/engine_core" CACHE PATH "Root directory that contains the RTDink and Proton submodules" FORCE)
-set(RTDINK_ROOT "${ENGINE_CORE_ROOT}/RTDink" CACHE PATH "Location of the RTDink engine source tree" FORCE)
-set(PROTON_ROOT "${ENGINE_CORE_ROOT}/proton" CACHE PATH "Location of the Proton SDK source tree" FORCE)
+function(pm_define_path_cache variable default_value docstring)
+    if(NOT DEFINED ${variable} OR "${${variable}}" STREQUAL "")
+        set(${variable} "${default_value}" CACHE PATH "${docstring}")
+    else()
+        set(${variable} "${${variable}}" CACHE PATH "${docstring}")
+    endif()
+endfunction()
+
+pm_define_path_cache("ENGINE_CORE_ROOT" "${PROJECTMYTHOS_ROOT}/engine_core" "Root directory that contains the RTDink and Proton submodules")
+pm_define_path_cache("RTDINK_ROOT" "${ENGINE_CORE_ROOT}/RTDink" "Location of the RTDink engine source tree")
+pm_define_path_cache("PROTON_ROOT" "${ENGINE_CORE_ROOT}/proton" "Location of the Proton SDK source tree")
 
 set(RTDINK_ADDITIONAL_INCLUDE_DIRS "" CACHE STRING "Optional, semicolon-separated list of extra RTDink include directories")
 set(PROTON_ADDITIONAL_INCLUDE_DIRS "" CACHE STRING "Optional, semicolon-separated list of extra Proton include directories")
@@ -89,6 +97,8 @@ target_include_directories(ProjectMythos PRIVATE
 set(engine_include_dirs "")
 set(engine_libraries "")
 
+set(rtdink_include_dirs "")
+
 set(rtdink_include_candidates
     ""
     include
@@ -108,7 +118,7 @@ set(rtdink_library_candidates
 pm_collect_dependency("RTDink" "${RTDINK_ROOT}" rtdink_include_candidates rtdink_library_candidates RTDINK_DETECTED_INCLUDES RTDINK_DETECTED_LIBS)
 
 if(RTDINK_DETECTED_INCLUDES)
-    list(APPEND engine_include_dirs ${RTDINK_DETECTED_INCLUDES})
+    list(APPEND rtdink_include_dirs ${RTDINK_DETECTED_INCLUDES})
     message(STATUS "RTDink include directories: ${RTDINK_DETECTED_INCLUDES}")
 elseif(IS_DIRECTORY "${RTDINK_ROOT}")
     message(STATUS "RTDink root found at ${RTDINK_ROOT} but no standard include directories detected. Use RTDINK_ADDITIONAL_INCLUDE_DIRS to specify them explicitly.")
@@ -167,7 +177,12 @@ endif()
 
 if(RTDINK_ADDITIONAL_INCLUDE_DIRS)
     separate_arguments(_rtdink_extra_includes UNIX_COMMAND "${RTDINK_ADDITIONAL_INCLUDE_DIRS}")
-    list(APPEND engine_include_dirs ${_rtdink_extra_includes})
+    list(APPEND rtdink_include_dirs ${_rtdink_extra_includes})
+endif()
+
+if(rtdink_include_dirs)
+    list(REMOVE_DUPLICATES rtdink_include_dirs)
+    list(APPEND engine_include_dirs ${rtdink_include_dirs})
 endif()
 
 if(PROTON_ADDITIONAL_INCLUDE_DIRS)
@@ -183,6 +198,13 @@ endif()
 if(engine_libraries)
     list(REMOVE_DUPLICATES engine_libraries)
     target_link_libraries(ProjectMythos PRIVATE ${engine_libraries})
+endif()
+
+if(rtdink_include_dirs)
+    target_compile_definitions(ProjectMythos PRIVATE PROJECTMYTHOS_HAS_ENGINE=1)
+else()
+    target_compile_definitions(ProjectMythos PRIVATE PROJECTMYTHOS_HAS_ENGINE=0)
+    message(STATUS "Building without RTDink/Proton engine integration; GameCore stubs will be used.")
 endif()
 
 if(ANDROID)
