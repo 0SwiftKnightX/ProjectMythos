@@ -1,8 +1,17 @@
+#ifndef PROJECTMYTHOS_HAS_ENGINE
+#define PROJECTMYTHOS_HAS_ENGINE 0
+#endif
+
+#if PROJECTMYTHOS_HAS_ENGINE
 #include "GameCore.h"
+#else
+#include <iostream>
+#endif
 
 #include <iostream>
 
 int main() {
+#if PROJECTMYTHOS_HAS_ENGINE
     GameCore game;
     game.init();
 
