@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/vehicles/physics_vehicle.gd" id="1"]
+
+[sub_resource type="BoxShape3D" id="BodyShape"]
+size = Vector3(1, 1, 1)
+
+[node name="RuntimeVehicle" type="RigidBody3D"]
+mass = 4.0
+script = ExtResource("1")
+
+[node name="CoreCollision" type="CollisionShape3D" parent="."]
+shape = SubResource("BodyShape")

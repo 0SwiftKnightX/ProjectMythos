@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/build/construction_part.gd" id="1"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_block"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape_block"]
+size = Vector3(1, 1, 1)
+
+[node name="Block1m" type="Node3D"]
+script = ExtResource("1")
+part_id = "block_1m"
+attachment_points = [{"id": "top", "position": [0, 0.5, 0], "normal": [0, 1, 0]}, {"id": "bottom", "position": [0, -0.5, 0], "normal": [0, -1, 0]}]
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_block")
+
+[node name="SelectableCollision" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SelectableCollision"]
+shape = SubResource("BoxShape_block")

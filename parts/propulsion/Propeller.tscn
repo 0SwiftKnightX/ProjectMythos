@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/build/construction_part.gd" id="1"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hub"]
+top_radius = 0.15
+bottom_radius = 0.15
+height = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_blade"]
+size = Vector3(1.2, 0.08, 0.16)
+
+[sub_resource type="BoxShape3D" id="BoxShape_propeller"]
+size = Vector3(1.2, 0.3, 0.3)
+
+[node name="Propeller" type="Node3D"]
+script = ExtResource("1")
+part_id = "propeller"
+dimensions = Vector3(1.2, 0.3, 0.3)
+attachment_points = [{"id": "mount", "position": [0, 0, 0.15], "normal": [0, 0, 1]}]
+component_properties = {"power": 1.0}
+
+[node name="Hub" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_hub")
+rotation_degrees = Vector3(90, 0, 0)
+
+[node name="BladeA" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_blade")
+
+[node name="BladeB" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_blade")
+rotation_degrees = Vector3(0, 0, 90)
+
+[node name="SelectableCollision" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SelectableCollision"]
+shape = SubResource("BoxShape_propeller")

@@ -1,0 +1,10 @@
+{
+  "id": "starter_flyer",
+  "name": "Starter Flyer",
+  "version": 1,
+  "is_prebuilt": true,
+  "parts": [
+    {"order": 1, "part_id": "block_1m", "construction_id": "starter_block", "position": [0, 0, 0], "rotation": [0, 0, 0], "scale": [1, 1, 1], "attachments": [], "properties": {}},
+    {"order": 2, "part_id": "propeller", "construction_id": "starter_propeller", "position": [0, 0, 2], "rotation": [0, 180, 0], "scale": [1, 1, 1], "attachments": [], "properties": {"power": 1.0}}
+  ]
+}
