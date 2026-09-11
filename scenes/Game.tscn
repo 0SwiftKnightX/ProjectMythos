@@ -1,0 +1,82 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/game.gd" id="1_game"]
+[ext_resource type="PackedScene" path="res://scenes/worlds/HomeWorld.tscn" id="2_home"]
+[ext_resource type="PackedScene" path="res://scenes/worlds/BuildArea.tscn" id="3_build"]
+[ext_resource type="PackedScene" path="res://scenes/worlds/Lobby.tscn" id="4_lobby"]
+[ext_resource type="Script" path="res://scripts/ui/mobile_ui.gd" id="5_ui"]
+
+[node name="Game" type="Node3D"]
+script = ExtResource("1_game")
+
+[node name="HomeWorld" parent="." instance=ExtResource("2_home")]
+
+[node name="BuildArea" parent="." instance=ExtResource("3_build")]
+
+[node name="Lobby" parent="." instance=ExtResource("4_lobby")]
+
+[node name="MobileUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("5_ui")
+
+[node name="Actions" type="VBoxContainer" parent="MobileUI"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 180.0
+offset_bottom = 520.0
+theme_override_constants/separation = 8
+
+[node name="EnterBuild" type="Button" parent="MobileUI/Actions" groups=["mobile_action"]]
+layout_mode = 2
+text = "Build Area"
+
+[node name="ExitBuild" type="Button" parent="MobileUI/Actions" groups=["mobile_action"]]
+layout_mode = 2
+text = "Home World"
+
+[node name="Block" type="Button" parent="MobileUI/Actions" groups=["mobile_action"]]
+layout_mode = 2
+text = "Block"
+
+[node name="Propeller" type="Button" parent="MobileUI/Actions" groups=["mobile_action"]]
+layout_mode = 2
+text = "Propeller"
+
+[node name="RotateLeft" type="Button" parent="MobileUI/Actions" groups=["mobile_action"]]
+layout_mode = 2
+text = "Rotate Left"
+
+[node name="RotateRight" type="Button" parent="MobileUI/Actions" groups=["mobile_action"]]
+layout_mode = 2
+text = "Rotate Right"
+
+[node name="Duplicate" type="Button" parent="MobileUI/Actions" groups=["mobile_action"]]
+layout_mode = 2
+text = "Duplicate"
+
+[node name="Delete" type="Button" parent="MobileUI/Actions" groups=["mobile_action"]]
+layout_mode = 2
+text = "Delete"
+
+[node name="Save" type="Button" parent="MobileUI/Actions" groups=["mobile_action"]]
+layout_mode = 2
+text = "Save"
+
+[node name="LoadStarter" type="Button" parent="MobileUI/Actions" groups=["mobile_action"]]
+layout_mode = 2
+text = "Load Starter"
+
+[node name="Play" type="Button" parent="MobileUI/Actions" groups=["mobile_action"]]
+layout_mode = 2
+text = "Play"
+
+[node name="Summon" type="Button" parent="MobileUI/Actions" groups=["mobile_action"]]
+layout_mode = 2
+text = "Summon"

@@ -1,0 +1,26 @@
+[application]
+config/name="Mythos Blueprint Sandbox"
+run/main_scene="res://scenes/Game.tscn"
+config/features=PackedStringArray("4.3", "Mobile")
+
+[autoload]
+GameManager="*res://scripts/game/game_manager.gd"
+PartRegistry="*res://scripts/build/part_registry.gd"
+BlueprintManager="*res://scripts/blueprint/blueprint_manager.gd"
+SummonSystem="*res://scripts/vehicles/summon_system.gd"
+
+[display]
+window/size/viewport_width=720
+window/size/viewport_height=1280
+window/size/window_width_override=360
+window/size/window_height_override=640
+window/stretch/mode="canvas_items"
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false
+
+[input]
+build_rotate_left={"deadzone": 0.5, "events": [Object(InputEventKey,"physical_keycode":81)]}
+build_rotate_right={"deadzone": 0.5, "events": [Object(InputEventKey,"physical_keycode":69)]}
