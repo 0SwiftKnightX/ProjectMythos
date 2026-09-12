@@ -88,18 +88,17 @@ func _snap_to_attachment(part: ConstructionPart, requested_position: Vector3) ->
 	# Scenes provide these points, so compatible new part types need no Blueprint changes.
 	var best_position := requested_position
 	var best_distance := 0.2
-	for child: Node in construction_root.get_children():
-		var candidate := child as ConstructionPart
-		if candidate == null or candidate == part:
+	for candidate in construction_root.get_children():
+		if candidate == part or not candidate is ConstructionPart:
 			continue
 		for own_point in part.attachment_points:
 			for other_point in candidate.attachment_points:
 				var own_values: Array = own_point.get("position", [0, 0, 0])
 				var other_values: Array = other_point.get("position", [0, 0, 0])
-				var own_offset: Vector3 = Vector3(float(own_values[0]), float(own_values[1]), float(own_values[2]))
-				var other_position: Vector3 = candidate.position + Vector3(float(other_values[0]), float(other_values[1]), float(other_values[2]))
-				var snapped_position: Vector3 = other_position - own_offset
-				var distance: float = requested_position.distance_to(snapped_position)
+				var own_offset := Vector3(own_values[0], own_values[1], own_values[2])
+				var other_position := candidate.position + Vector3(other_values[0], other_values[1], other_values[2])
+				var snapped_position := other_position - own_offset
+				var distance := requested_position.distance_to(snapped_position)
 				if distance < best_distance:
 					best_distance = distance
 					best_position = GridSnapSystem.snap_world_position(snapped_position)
