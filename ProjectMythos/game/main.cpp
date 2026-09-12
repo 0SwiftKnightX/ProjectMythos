@@ -38,4 +38,8 @@ int main() {
     game.resume();
 
     return 0;
+#else
+    std::cout << "ProjectMythos scaffold built without a game engine backend." << std::endl;
+    return 0;
+#endif
 }
