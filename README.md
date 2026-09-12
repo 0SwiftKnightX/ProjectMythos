@@ -1,28 +1,40 @@
-# Project Mythos — Scaffold
+# Project Mythos — Blueprint Sandbox Prototype
 
-This is a starter scaffold to build a new game on top of RTDink/Proton.
-It includes:
-- Build configs (CMake + Android Gradle)
-- Core gameplay class skeletons
-- Asset directory layout
-- Theme Bible
-- Codex Prompt Pack (for codegen in stages)
+This Godot 4.3 project is a mobile-first vertical slice for the data-driven
+Blueprint/Summon vehicle workflow. A Blueprint is the persistent source of
+truth; a runtime vehicle is reconstructed from its ordered construction records.
 
-## Getting Started
+## Run locally
 
-1) Add the RTDink engine as a submodule (or reference path) and Proton SDK:
-```
-git submodule add https://github.com/SethRobinson/RTDink engine_core/RTDink
-git submodule add https://github.com/SethRobinson/proton engine_core/proton
-```
-2) Adjust include/link paths in `build/cmake/CMakeLists.txt` as needed (see comments).
-3) Build (desktop example):
-```
-mkdir -p build/out && cd build/out
-cmake ../cmake && cmake --build .
-```
-4) Android: open `build/android` in Android Studio or use Gradle CLI.
+1. Install Godot 4.3 or newer.
+2. Import the repository root (`project.godot`) into the Godot Project Manager.
+3. Run `scenes/Game.tscn`. Tap **Build Area**, select **Block** or
+   **Propeller**, and tap the build plane to place it. Tap existing parts to
+   select them; drag a selected part to move it.
+4. Use **Save**, **Play**, or return to **Home World** and use **Summon**.
+   Blueprints are stored as inspectable JSON under `user://blueprints`.
 
-## Licensing
-- Ensure you comply with RTDink/Proton licenses.
-- Replace any non-OSS assets before publishing.
+For Android, install the Godot Android export templates and configure an Android
+SDK/JDK in Godot's Editor Settings, then export using the Android preset. The
+project uses the mobile compatibility renderer to keep the initial prototype
+lightweight.
+
+## Architecture
+
+* `scenes/worlds/` contains separate Home World, Build Area, and Lobby contexts.
+* `scripts/blueprint/` owns versioned, ordered JSON recipes and persistence.
+* `scripts/build/` contains deterministic one-third-meter snapping, part
+  registration, touch placement, and reconstruction.
+* `scripts/vehicles/` builds `RigidBody3D` runtime vehicles and applies each
+  propeller's local-axis thrust at its placement position.
+* `data/blueprints/` contains prebuilt recipes that use exactly the same format
+  as player-created Blueprints.
+
+## Checks
+
+```sh
+python3 tests/test_blueprint_contract.py
+cmake -S ProjectMythos/build/cmake -B /tmp/projectmythos-cmake-build -DBUILD_TESTING=ON
+cmake --build /tmp/projectmythos-cmake-build --parallel
+ctest --test-dir /tmp/projectmythos-cmake-build --output-on-failure
+```
