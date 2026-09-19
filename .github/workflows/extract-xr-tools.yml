@@ -1,0 +1,42 @@
+name: Extract XR Tools Package
+
+on:
+  push:
+    paths:
+      - success.zip
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract-xr-tools:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract XR Tools
+        run: |
+          rm -rf /tmp/success_extract
+          mkdir -p /tmp/success_extract
+          unzip -q success.zip -d /tmp/success_extract
+          test -d /tmp/success_extract/success/addons/godot-xr-tools
+          rm -rf addons/godot-xr-tools
+          mkdir -p addons
+          cp -R /tmp/success_extract/success/addons/godot-xr-tools addons/godot-xr-tools
+          test -f addons/godot-xr-tools/plugin.cfg
+
+      - name: Commit extracted addon
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add addons/godot-xr-tools
+          if git diff --cached --quiet; then
+            echo "XR Tools already extracted; nothing to commit."
+            exit 0
+          fi
+          git commit -m "Add XR Tools 4.5.1 addon from success package"
+          git push origin HEAD:build-prototype-001-xr-foundation
