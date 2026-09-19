@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=2 format=3]
 
 [ext_resource type="Script" path="res://scripts/build/build_manager.gd" id="1_build"]
-[ext_resource type="Script" path="res://scripts/input/build_touch_input.gd" id="2_input"]
 
 [node name="BuildArea" type="Node3D"]
 
@@ -14,8 +13,3 @@ current = true
 [node name="BuildManager" type="Node3D" parent="."]
 script = ExtResource("1_build")
 construction_root = NodePath("../ConstructionRoot")
-
-[node name="TouchInput" type="Node" parent="."]
-script = ExtResource("2_input")
-camera = NodePath("../BuildCamera")
-build_manager = NodePath("../BuildManager")
