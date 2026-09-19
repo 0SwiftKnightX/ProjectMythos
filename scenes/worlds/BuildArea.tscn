@@ -1,15 +1,99 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/build/build_manager.gd" id="1_build"]
+[ext_resource type="PackedScene" path="res://scenes/xr/XRPlayer.tscn" id="2_xr"]
+[ext_resource type="PackedScene" path="res://parts/blocks/Block_1m.tscn" id="3_block"]
+[ext_resource type="Script" path="res://scripts/build/xr_build_interaction.gd" id="4_interaction"]
+[ext_resource type="PackedScene" path="res://scenes/xr/RotationButton.tscn" id="5_button"]
+
+[sub_resource type="BoxMesh" id="FloorMesh"]
+size = Vector3(12, 0.1, 12)
+
+[sub_resource type="BoxShape3D" id="FloorShape"]
+size = Vector3(12, 0.1, 12)
+
+[sub_resource type="StandardMaterial3D" id="FloorMaterial"]
+albedo_color = Color(0.12, 0.14, 0.16, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BackdropMesh"]
+size = Vector3(0.05, 4, 12)
+
+[sub_resource type="BoxShape3D" id="BackdropShape"]
+size = Vector3(0.05, 4, 12)
 
 [node name="BuildArea" type="Node3D"]
 
-[node name="BuildCamera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.89, 0.45, 0, -0.45, 0.89, 7, 8, 10)
-current = true
+[node name="XRPlayer" parent="." instance=ExtResource("2_xr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 3)
 
 [node name="ConstructionRoot" type="Node3D" parent="."]
+
+[node name="Block1m" parent="ConstructionRoot" instance=ExtResource("3_block")]
+position = Vector3(0, 1, -1)
 
 [node name="BuildManager" type="Node3D" parent="."]
 script = ExtResource("1_build")
 construction_root = NodePath("../ConstructionRoot")
+
+[node name="XRBuildInteraction" type="Node3D" parent="."]
+script = ExtResource("4_interaction")
+build_manager = NodePath("../BuildManager")
+construction_root = NodePath("../ConstructionRoot")
+
+[node name="RotationControls" type="Node3D" parent="."]
+
+[node name="RotateLeft" parent="RotationControls" instance=ExtResource("5_button")]
+position = Vector3(-0.8, 1, -1)
+axis = Vector3(0, 1, 0)
+direction = -1
+[node name="Label" parent="RotationControls/RotateLeft"]
+text = "↺"
+
+[node name="RotateRight" parent="RotationControls" instance=ExtResource("5_button")]
+position = Vector3(0.8, 1, -1)
+axis = Vector3(0, 1, 0)
+direction = 1
+[node name="Label" parent="RotationControls/RotateRight"]
+text = "↻"
+
+[node name="RotateUp" parent="RotationControls" instance=ExtResource("5_button")]
+position = Vector3(0, 1.8, -1)
+axis = Vector3(1, 0, 0)
+direction = -1
+[node name="Label" parent="RotationControls/RotateUp"]
+text = "↑"
+
+[node name="RotateDown" parent="RotationControls" instance=ExtResource("5_button")]
+position = Vector3(0, 0.2, -1)
+axis = Vector3(1, 0, 0)
+direction = 1
+[node name="Label" parent="RotationControls/RotateDown"]
+text = "↓"
+
+[node name="Floor" type="StaticBody3D" parent="."]
+collision_layer = 1
+collision_mask = 4
+
+[node name="Mesh" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("FloorMesh")
+material_override = SubResource("FloorMaterial")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("FloorShape")
+
+[node name="Backdrop" type="StaticBody3D" parent="."]
+position = Vector3(0, 2, -5)
+collision_layer = 1
+collision_mask = 4
+
+[node name="Mesh" type="MeshInstance3D" parent="Backdrop"]
+mesh = SubResource("BackdropMesh")
+material_override = SubResource("FloorMaterial")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Backdrop"]
+shape = SubResource("BackdropShape")
+
+[node name="Light" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-50, -30, 0)
+shadow_enabled = true
