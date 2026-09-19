@@ -1,0 +1,32 @@
+name: Godot project validation
+
+on:
+  push:
+    branches:
+      - main
+      - build-prototype-001-xr-foundation
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Godot 4.6.1
+        run: |
+          wget -q https://github.com/godotengine/godot-builds/releases/download/4.6.1-stable/Godot_v4.6.1-stable_linux.x86_64.zip
+          unzip -q Godot_v4.6.1-stable_linux.x86_64.zip -d godot
+          chmod +x godot/Godot_v4.6.1-stable_linux.x86_64
+
+      - name: Import and parse project
+        run: |
+          godot/Godot_v4.6.1-stable_linux.x86_64 --headless --editor --path . --quit-after 10
+
+      - name: Check for parser errors
+        run: |
+          if grep -RInE "SCRIPT ERROR|Parse Error|ERROR:" .godot 2>/dev/null; then
+            echo "Godot reported project errors."
+            exit 1
+          fi
