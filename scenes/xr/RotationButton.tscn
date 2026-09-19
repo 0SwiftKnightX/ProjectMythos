@@ -1,9 +1,12 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/build/xr_build_rotation_button.gd" id="1_script"]
 
 [sub_resource type="BoxShape3D" id="BoxShape_button"]
-size = Vector3(0.18, 0.18, 0.08)
+size = Vector3(0.22, 0.22, 0.08)
+
+[sub_resource type="BoxMesh" id="BoxMesh_button"]
+size = Vector3(0.22, 0.22, 0.08)
 
 [node name="RotationButton" type="Area3D"]
 collision_layer = 1048576
@@ -11,7 +14,14 @@ collision_mask = 0
 script = ExtResource("1_script")
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
-mesh = null
+mesh = SubResource("BoxMesh_button")
+
+[node name="Label" type="Label3D" parent="."]
+text = "↻"
+font_size = 48
+outline_size = 8
+modulate = Color(1, 1, 1, 1)
+pixel_size = 0.002
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape_button")
