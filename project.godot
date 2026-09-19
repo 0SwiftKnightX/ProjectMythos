@@ -1,7 +1,8 @@
 [application]
+config_version=5
 config/name="Mythos Blueprint Sandbox"
 run/main_scene="res://scenes/Game.tscn"
-config/features=PackedStringArray("4.3", "Mobile")
+config/features=PackedStringArray("4.6", "Mobile")
 
 [autoload]
 GameManager="*res://scripts/game/game_manager.gd"
@@ -16,10 +17,30 @@ window/size/window_width_override=360
 window/size/window_height_override=640
 window/stretch/mode="canvas_items"
 
+[physics]
+3d/physics_engine="GodotPhysics3D"
+
+[layer_names]
+3d_physics/layer_1="Static World"
+3d_physics/layer_2="Dynamic World"
+3d_physics/layer_3="Pickable Objects"
+3d_physics/layer_17="Held Objects"
+3d_physics/layer_18="Player Hands"
+3d_physics/layer_19="Grab Handles"
+3d_physics/layer_20="Player Body"
+3d_physics/layer_21="Pointable Objects"
+3d_physics/layer_23="UI Objects"
+
 [rendering]
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/default_filters/use_nearest_mipmap_filter=false
+
+[xr]
+openxr/enabled=true
+openxr/foveation_level=3
+openxr/foveation_dynamic=true
+shaders/enabled=true
 
 [input]
 build_rotate_left={"deadzone": 0.5, "events": [Object(InputEventKey,"physical_keycode":81)]}
