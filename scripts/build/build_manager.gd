@@ -9,6 +9,9 @@ var selected_part: ConstructionPart
 var selected_part_type := "block_1m"
 var _builder := BlueprintBuilder.new()
 
+const ROTATION_STEP_DEGREES := 45.0
+const ATTACHMENT_SNAP_DISTANCE := 0.2
+
 func new_blueprint(name := "Untitled Vehicle") -> void:
 	_clear_parts()
 	active_blueprint = BlueprintManager.create_blueprint(name)
@@ -42,8 +45,15 @@ func move_selected(world_position: Vector3) -> void:
 		selected_part.position = _snap_to_attachment(selected_part, GridSnapSystem.snap_world_position(world_position))
 
 func rotate_selected(direction: int) -> void:
-	if selected_part != null:
-		selected_part.rotation_degrees.y = fmod(selected_part.rotation_degrees.y + 90.0 * direction, 360.0)
+	rotate_selected_axis(Vector3.UP, direction)
+
+func rotate_selected_axis(axis: Vector3, direction: int) -> void:
+	if selected_part == null or direction == 0:
+		return
+	var normalized_axis := axis.normalized()
+	var rotation_delta := deg_to_rad(ROTATION_STEP_DEGREES * signi(direction))
+	selected_part.rotate_object_local(normalized_axis, rotation_delta)
+	selected_part.rotation_degrees = _snap_rotation_to_step(selected_part.rotation_degrees)
 
 func delete_selected() -> void:
 	if selected_part != null:
@@ -85,9 +95,9 @@ func _clear_parts() -> void:
 	selected_part = null
 
 func _snap_to_attachment(part: ConstructionPart, requested_position: Vector3) -> Vector3:
-	# Scenes provide these points, so compatible new part types need no Blueprint changes.
+	# Attachment points are local-space coordinates and must follow each part's rotation.
 	var best_position := requested_position
-	var best_distance := 0.2
+	var best_distance := ATTACHMENT_SNAP_DISTANCE
 	for child: Node in construction_root.get_children():
 		var candidate: ConstructionPart = child as ConstructionPart
 		if candidate == null or candidate == part:
@@ -95,8 +105,9 @@ func _snap_to_attachment(part: ConstructionPart, requested_position: Vector3) ->
 		for own_point in part.attachment_points:
 			for other_point in candidate.attachment_points:
 				var own_offset: Vector3 = _attachment_offset(own_point)
-				var other_position: Vector3 = candidate.position + _attachment_offset(other_point)
-				var snapped_position: Vector3 = other_position - own_offset
+				var other_offset: Vector3 = _attachment_offset(other_point)
+				var other_position: Vector3 = candidate.position + (candidate.basis * other_offset)
+				var snapped_position: Vector3 = other_position - (part.basis * own_offset)
 				var distance: float = requested_position.distance_to(snapped_position)
 				if distance < best_distance:
 					best_distance = distance
@@ -106,3 +117,14 @@ func _snap_to_attachment(part: ConstructionPart, requested_position: Vector3) ->
 func _attachment_offset(point: Dictionary) -> Vector3:
 	var coordinates: Array = point.get("position", [0, 0, 0])
 	return Vector3(float(coordinates[0]), float(coordinates[1]), float(coordinates[2]))
+
+func _snap_rotation_to_step(rotation_degrees: Vector3) -> Vector3:
+	return Vector3(
+		_snap_angle(rotation_degrees.x),
+		_snap_angle(rotation_degrees.y),
+		_snap_angle(rotation_degrees.z)
+	)
+
+func _snap_angle(value: float) -> float:
+	var snapped := round(value / ROTATION_STEP_DEGREES) * ROTATION_STEP_DEGREES
+	return fposmod(snapped + 360.0, 360.0)
