@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://addons/godot-xr-tools/functions/function_pickup.tscn" id="1_pickup"]
+[ext_resource type="PackedScene" path="res://addons/godot-xr-tools/functions/function_pointer.tscn" id="2_pointer"]
+
+[node name="XRPlayer" type="XROrigin3D"]
+
+[node name="XRCamera3D" type="XRCamera3D" parent="."]
+
+[node name="LeftController" type="XRController3D" parent="."]
+tracker = &"left_hand"
+
+[node name="Pickup" parent="LeftController" instance=ExtResource("1_pickup")]
+
+[node name="Pointer" parent="LeftController" instance=ExtResource("2_pointer")]
+
+[node name="RightController" type="XRController3D" parent="."]
+tracker = &"right_hand"
+
+[node name="Pickup" parent="RightController" instance=ExtResource("1_pickup")]
+
+[node name="Pointer" parent="RightController" instance=ExtResource("2_pointer")]
