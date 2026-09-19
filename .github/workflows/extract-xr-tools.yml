@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - success.zip
+      - .github/workflows/extract-xr-tools.yml
   workflow_dispatch:
 
 permissions:
