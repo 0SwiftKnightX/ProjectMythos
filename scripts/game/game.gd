@@ -9,6 +9,8 @@ extends Node3D
 func _ready() -> void:
 	GameManager.register_contexts(home_world, build_area, lobby)
 	build_manager.new_blueprint("Starter Craft")
+	# Prototype 001 launches directly into the XR build sandbox.
+	GameManager.set_context(GameManager.Context.BUILD_AREA)
 	ui.enter_build.connect(func(): GameManager.set_context(GameManager.Context.BUILD_AREA))
 	ui.exit_build.connect(func(): GameManager.set_context(GameManager.Context.HOME_WORLD))
 	ui.place_block.connect(func(): build_manager.select_part_type("block_1m"))
