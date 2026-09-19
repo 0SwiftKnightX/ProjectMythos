@@ -1,7 +1,7 @@
 class_name BuildPlacementValidator
 extends RefCounted
 
-const DEFAULT_COLLISION_MASK := 1 << 2
+const DEFAULT_COLLISION_MASK := (1 << 0) | (1 << 2)
 
 static func is_position_valid(
 	part: ConstructionPart,
