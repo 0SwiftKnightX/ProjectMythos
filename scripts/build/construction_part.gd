@@ -1,5 +1,5 @@
 class_name ConstructionPart
-extends Node3D
+extends XRToolsPickable
 
 @export var part_id := "block_1m"
 @export var construction_id := ""
