@@ -2,7 +2,8 @@ class_name GridSnapSystem
 extends RefCounted
 
 # Integer grid coordinates prevent floating point drift in saved construction data.
-const SUBDIVISIONS_PER_METER := 3
+# 1 meter = 10 grid units, so 0.1 meter is the smallest build increment.
+const SUBDIVISIONS_PER_METER := 10
 
 static func snap_world_position(position: Vector3) -> Vector3:
 	return Vector3(_snap_axis(position.x), _snap_axis(position.y), _snap_axis(position.z))
