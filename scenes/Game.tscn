@@ -5,9 +5,12 @@
 [ext_resource type="PackedScene" path="res://scenes/worlds/BuildArea.tscn" id="3_build"]
 [ext_resource type="PackedScene" path="res://scenes/worlds/Lobby.tscn" id="4_lobby"]
 [ext_resource type="Script" path="res://scripts/ui/mobile_ui.gd" id="5_ui"]
+[ext_resource type="PackedScene" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="6_xr"]
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_game")
+
+[node name="StartXR" parent="." instance=ExtResource("6_xr")]
 
 [node name="HomeWorld" parent="." instance=ExtResource("2_home")]
 
@@ -16,6 +19,7 @@ script = ExtResource("1_game")
 [node name="Lobby" parent="." instance=ExtResource("4_lobby")]
 
 [node name="MobileUI" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
