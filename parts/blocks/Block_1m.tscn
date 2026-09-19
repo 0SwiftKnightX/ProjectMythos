@@ -17,6 +17,8 @@ attachment_points = [{"id": "top", "position": [0, 0.5, 0], "normal": [0, 1, 0]}
 mesh = SubResource("BoxMesh_block")
 
 [node name="SelectableCollision" type="StaticBody3D" parent="."]
+collision_layer = 4
+collision_mask = 5
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SelectableCollision"]
 shape = SubResource("BoxShape_block")
