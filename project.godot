@@ -1,5 +1,5 @@
 [application]
-config/name="Mythos Blueprint Sandbox"
+config/name="QUIRK"
 run/main_scene="res://scenes/Game.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
 
