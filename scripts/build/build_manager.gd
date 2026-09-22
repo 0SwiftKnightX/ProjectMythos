@@ -9,6 +9,10 @@ var selected_part: ConstructionPart
 var selected_part_type := "block_1m"
 var _builder := BlueprintBuilder.new()
 
+func _ready() -> void:
+	if construction_root == null:
+		construction_root = get_parent().get_node_or_null("ConstructionRoot") as Node3D
+
 func new_blueprint(name := "Untitled Vehicle") -> void:
 	_clear_parts()
 	active_blueprint = BlueprintManager.create_blueprint(name)
