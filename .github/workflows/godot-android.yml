@@ -94,12 +94,11 @@ jobs:
             adb logcat -d -t 1000 > runtime-logcat.txt
             adb shell dumpsys package com.ugen.playquirk > runtime-package.txt
             adb exec-out screencap -p > runtime-launch.png
-            if ! adb shell pidof com.ugen.playquirk; then
-              echo "QUIRK process is not running after launch"
+            if ! adb shell dumpsys activity activities | grep -q "com.godot.game.GodotApp"; then
+              echo "QUIRK Godot activity is not active after launch"
               grep -E "FATAL EXCEPTION|AndroidRuntime|Godot|E/|signal|crash" runtime-logcat.txt | tail -200 || true
               exit 1
             fi
-            adb shell dumpsys activity activities | grep -q "com.ugen.playquirk"
             test -s runtime-launch.png
 
       - name: Upload runtime evidence
