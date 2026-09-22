@@ -55,5 +55,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: quirk-visual-v1-debug
-          path: build/android/${EXPORT_NAME}-debug.apk
+          path: build/android/quirk-visual-v1-debug.apk
           if-no-files-found: error
