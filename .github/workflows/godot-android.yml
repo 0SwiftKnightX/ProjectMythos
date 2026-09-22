@@ -48,8 +48,8 @@ jobs:
 
       - name: Sign debug APK
         run: |
-          apksigner sign --ks /root/debug.keystore --ks-key-alias androiddebugkey --ks-pass pass:android "build/android/${EXPORT_NAME}-debug.apk"
-          apksigner verify --verbose "build/android/${EXPORT_NAME}-debug.apk"
+          /usr/lib/android-sdk/build-tools/33.0.2/apksigner sign --ks /root/debug.keystore --ks-key-alias androiddebugkey --ks-pass pass:android "build/android/${EXPORT_NAME}-debug.apk"
+          /usr/lib/android-sdk/build-tools/33.0.2/apksigner verify --verbose "build/android/${EXPORT_NAME}-debug.apk"
 
       - name: Upload visual APK
         uses: actions/upload-artifact@v4
