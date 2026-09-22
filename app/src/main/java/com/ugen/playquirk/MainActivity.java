@@ -204,5 +204,6 @@ public class MainActivity extends Activity {
         try{t.put("template",true).put("level",5).put("xp",350).put("gems",500).put("coins",2500);JSONArray inv=t.optJSONArray("inventory");inv.put("Ironblade");inv.put("Rare Core");}catch(Exception ignored){}
         characters.add(t);active=t;activeId=t.optString("id");save(t);showCharacters();
     }
-    void putInt(JSONObject c,String key,int value){try{c.put(key,value);}catch(Exception ignored){}}\n    void toast(String s){Toast.makeText(this,s,Toast.LENGTH_SHORT).show();}
+    void putInt(JSONObject c,String key,int value){try{c.put(key,value);}catch(Exception ignored){}}
+    void toast(String s){Toast.makeText(this,s,Toast.LENGTH_SHORT).show();}
 }
