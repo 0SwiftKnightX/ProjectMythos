@@ -139,7 +139,7 @@ public class MainActivity extends Activity {
         gap();
         body.addView(button("Explore — gain XP, coins and loot",v->explore()));
         body.addView(button("Craft Ironblade — spend 2 Iron Ore",v->craft()));
-        body.addView(button("Cycle Appearance",v->{active.put("appearance",(active.optInt("appearance",0)+1)%5);save(active);showGame();}));
+        body.addView(button("Cycle Appearance",v->{putInt(active,"appearance",(active.optInt("appearance",0)+1)%5);save(active);showGame();}));
         body.addView(button("Save Progress",v->{save(active);Toast.makeText(this,"Saved locally with atomic write.",Toast.LENGTH_SHORT).show();}));
         body.addView(button("Quests",v->showQuests()));
         body.addView(button("Logout → Character Selection",v->showCharacters()));
@@ -194,7 +194,7 @@ public class MainActivity extends Activity {
     void showSettings(){
         shell("Settings");
         card("OFFLINE MODE\nNo authentication, Google login, Firebase or network dependency is required for ordinary play. Local saves remain usable after process restart.");
-        body.addView(button("Restore 100 Fuel",v->{if(active!=null){active.put("fuel",100);save(active);toast("Fuel restored locally.");}}));
+        body.addView(button("Restore 100 Fuel",v->{if(active!=null){putInt(active,"fuel",100);save(active);toast("Fuel restored locally.");}}));
         body.addView(button("Repair / Re-read local saves",v->{loadAll();active=find(activeId);toast("Local saves reloaded.");}));
         body.addView(button("Template policy",v->new AlertDialog.Builder(this).setTitle("Separate template").setMessage("The template is imported as its own character record. It is never used as the clean first-run user save.").setPositiveButton("OK",null).show()));
     }
@@ -204,5 +204,5 @@ public class MainActivity extends Activity {
         try{t.put("template",true).put("level",5).put("xp",350).put("gems",500).put("coins",2500);JSONArray inv=t.optJSONArray("inventory");inv.put("Ironblade");inv.put("Rare Core");}catch(Exception ignored){}
         characters.add(t);active=t;activeId=t.optString("id");save(t);showCharacters();
     }
-    void toast(String s){Toast.makeText(this,s,Toast.LENGTH_SHORT).show();}
+    void putInt(JSONObject c,String key,int value){try{c.put(key,value);}catch(Exception ignored){}}\n    void toast(String s){Toast.makeText(this,s,Toast.LENGTH_SHORT).show();}
 }
