@@ -90,10 +90,28 @@ jobs:
             adb shell pm clear com.ugen.playquirk
             adb shell monkey -p com.ugen.playquirk -c android.intent.category.LAUNCHER 1
             sleep 8
-            adb shell pidof com.ugen.playquirk
-            adb shell dumpsys activity activities | grep -q "com.ugen.playquirk"
+            sleep 2
+            adb logcat -d -t 1000 > runtime-logcat.txt
+            adb shell dumpsys package com.ugen.playquirk > runtime-package.txt
             adb exec-out screencap -p > runtime-launch.png
+            if ! adb shell pidof com.ugen.playquirk; then
+              echo "QUIRK process is not running after launch"
+              grep -E "FATAL EXCEPTION|AndroidRuntime|Godot|E/|signal|crash" runtime-logcat.txt | tail -200 || true
+              exit 1
+            fi
+            adb shell dumpsys activity activities | grep -q "com.ugen.playquirk"
             test -s runtime-launch.png
+
+      - name: Upload runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quirk-visual-v1-runtime-evidence
+          path: |
+            runtime-launch.png
+            runtime-logcat.txt
+            runtime-package.txt
+          if-no-files-found: warn
 
       - name: Upload runtime screenshot
         uses: actions/upload-artifact@v4
