@@ -1,0 +1,54 @@
+name: Quirk Visual Android
+
+on:
+  push:
+    paths:
+      - "project.godot"
+      - "scenes/**"
+      - "scripts/**"
+      - "parts/**"
+      - "data/**"
+      - "export_presets.cfg"
+      - ".github/workflows/godot-android.yml"
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: "4.3"
+  EXPORT_NAME: "quirk-visual-v1"
+
+jobs:
+  android:
+    name: Build visual Android APK
+    runs-on: ubuntu-24.04
+    container:
+      image: barichello/godot-ci:4.3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Prepare Godot
+        run: |
+          mkdir -p ~/.local/share/godot/export_templates
+          mkdir -p ~/.config
+          if [ -d /root/.config/godot ]; then cp -a /root/.config/godot/. ~/.config/godot/; fi
+          if [ -d /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ]; then
+            cp -a /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/
+          fi
+
+      - name: Import and validate project
+        run: |
+          godot --headless --editor --quit --path . --verbose
+
+      - name: Export Android debug APK
+        run: |
+          mkdir -p build/android
+          godot --headless --verbose --export-debug "Android Debug" "build/android/${EXPORT_NAME}-debug.apk"
+
+      - name: Upload visual APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: quirk-visual-v1-debug
+          path: build/android/${EXPORT_NAME}-debug.apk
+          if-no-files-found: error
