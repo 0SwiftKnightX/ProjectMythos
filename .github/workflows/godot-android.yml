@@ -57,3 +57,47 @@ jobs:
           name: quirk-visual-v1-debug
           path: build/android/quirk-visual-v1-debug.apk
           if-no-files-found: error
+
+
+  runtime:
+    name: Runtime smoke test
+    needs: android
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download visual APK
+        uses: actions/download-artifact@v4
+        with:
+          name: quirk-visual-v1-debug
+          path: build/android
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm4all"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Launch APK on Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          target: default
+          arch: x86_64
+          profile: pixel_7_pro
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          disable-animations: true
+          script: |
+            adb install -r build/android/quirk-visual-v1-debug.apk
+            adb shell pm clear com.ugen.playquirk
+            adb shell monkey -p com.ugen.playquirk -c android.intent.category.LAUNCHER 1
+            sleep 8
+            adb shell pidof com.ugen.playquirk
+            adb shell dumpsys activity activities | grep -q "com.ugen.playquirk"
+            adb exec-out screencap -p > runtime-launch.png
+            test -s runtime-launch.png
+
+      - name: Upload runtime screenshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: quirk-visual-v1-runtime-proof
+          path: runtime-launch.png
+          if-no-files-found: error
