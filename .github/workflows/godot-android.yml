@@ -94,6 +94,11 @@ jobs:
             adb logcat -d -t 1000 > runtime-logcat.txt
             adb shell dumpsys package com.ugen.playquirk > runtime-package.txt
             adb exec-out screencap -p > runtime-launch.png
+            if grep -q "USER SCRIPT ERROR" runtime-logcat.txt; then
+              echo "Godot reported a user script error during launch"
+              grep -E "USER SCRIPT ERROR|SCRIPT ERROR" runtime-logcat.txt | tail -100
+              exit 1
+            fi
             if ! adb shell dumpsys activity activities | grep -q "com.godot.game.GodotApp"; then
               echo "QUIRK Godot activity is not active after launch"
               grep -E "FATAL EXCEPTION|AndroidRuntime|Godot|E/|signal|crash" runtime-logcat.txt | tail -200 || true
