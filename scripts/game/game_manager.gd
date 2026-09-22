@@ -17,3 +17,10 @@ func set_context(context: Context) -> void:
 	home_world.visible = context == Context.HOME_WORLD
 	build_area.visible = context == Context.BUILD_AREA
 	lobby.visible = context == Context.LOBBY
+
+	var home_camera := home_world.get_node_or_null("HomeCamera") as Camera3D
+	var build_camera := build_area.get_node_or_null("BuildCamera") as Camera3D
+	if home_camera != null:
+		home_camera.current = context == Context.HOME_WORLD
+	if build_camera != null:
+		build_camera.current = context == Context.BUILD_AREA
