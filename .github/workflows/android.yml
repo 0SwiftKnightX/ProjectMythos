@@ -7,7 +7,7 @@ on:
       - "app/**"
       - "build.gradle"
       - "settings.gradle"
-      - ".github/workflows/android.yml"
+      - ".github/workflows/android.yml"\n      - "project.godot"
 
 jobs:
   build:
