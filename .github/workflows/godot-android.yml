@@ -94,16 +94,8 @@ jobs:
             adb logcat -d -t 2000 > runtime-logcat.txt
             adb shell dumpsys package com.ugen.playquirk > runtime-package.txt
             adb exec-out screencap -p > runtime-launch.png
-            if grep -q "USER SCRIPT ERROR" runtime-logcat.txt; then
-              echo "Godot reported a user script error during launch"
-              grep -E "USER SCRIPT ERROR|SCRIPT ERROR" runtime-logcat.txt | tail -100
-              exit 1
-            fi
-            if ! adb shell pidof com.ugen.playquirk; then
-              echo "QUIRK process is not running after launch"
-              grep -E "FATAL EXCEPTION|AndroidRuntime|Godot|E/|signal|crash" runtime-logcat.txt | tail -200 || true
-              exit 1
-            fi
+            python3 -c "import sys; s=open('runtime-logcat.txt',errors='ignore').read(); sys.exit(1 if 'USER SCRIPT ERROR' in s or 'SCRIPT ERROR' in s else 0)"
+            test -n "$(adb shell pidof com.ugen.playquirk)"
             test -s runtime-launch.png
 
       - name: Upload runtime evidence
