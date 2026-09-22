@@ -6,6 +6,12 @@ extends Node
 @export var build_plane_y := 0.0
 var _dragging := false
 
+func _ready() -> void:
+	if camera == null:
+		camera = get_parent().get_node_or_null("BuildCamera") as Camera3D
+	if build_manager == null:
+		build_manager = get_parent().get_node_or_null("BuildManager") as BuildManager
+
 func _unhandled_input(event: InputEvent) -> void:
 	if not GameManager.current_context == GameManager.Context.BUILD_AREA:
 		return
