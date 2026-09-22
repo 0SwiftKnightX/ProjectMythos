@@ -44,7 +44,7 @@ jobs:
       - name: Export Android debug APK
         run: |
           mkdir -p build/android
-          godot --headless --verbose --export-debug "Android Debug" "build/android/${EXPORT_NAME}-debug.apk"
+          godot --headless --verbose --install-android-build-template --export-debug "Android Debug" "build/android/${EXPORT_NAME}-debug.apk"
 
       - name: Sign debug APK
         run: |
