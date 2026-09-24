@@ -6,12 +6,23 @@ const PART_SCENES := {
 }
 
 func create_part(part_id: String, properties: Dictionary = {}) -> ConstructionPart:
-	if not PART_SCENES.has(part_id):
+	if not is_valid_part_id(part_id):
 		push_error("Unknown part type: %s" % part_id)
 		return null
-	var part := PART_SCENES[part_id].instantiate() as ConstructionPart
-	part.configure(part_id, properties)
-	return part
+	var scene = PART_SCENES[part_id]
+	if scene == null or not scene is PackedScene:
+		push_error("Invalid scene configuration for part type: %s" % part_id)
+		return null
+	var part := scene.instantiate()
+	if not part is ConstructionPart:
+		push_error("Registered scene does not instantiate ConstructionPart: %s" % part_id)
+		return null
+	var construction_part := part as ConstructionPart
+	construction_part.configure(part_id, properties)
+	return construction_part
 
 func has_part(part_id: String) -> bool:
 	return PART_SCENES.has(part_id)
+
+func is_valid_part_id(part_id: String) -> bool:
+	return has_part(part_id)
