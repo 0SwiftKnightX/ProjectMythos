@@ -121,8 +121,8 @@ func _validate_negative_fixture() -> int:
 	if ResourceLoader.exists(path, "PackedScene"):
 		push_error("Negative fixture scene unexpectedly exists: %s" % path)
 		return 1
-	if PartRegistry.has_part(str(fixture.part_id)):
-		push_error("Negative fixture contaminated the production registry: %s" % fixture.part_id)
+	if not PartRegistry.has_part(str(fixture.part_id)):
+		push_error("Negative fixture must reference a real registered part ID: %s" % fixture.part_id)
 		return 1
 	return 0
 
