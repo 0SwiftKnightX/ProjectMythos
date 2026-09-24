@@ -62,7 +62,7 @@ func _validate_blueprint_migration_and_parity() -> int:
 	if migrated.canonical_bytes().get_string_from_utf8() != expected_canonical:
 		push_error("Python/Godot canonical bytes mismatch")
 		failures += 1
-	if not migrated.to_dictionary().recursive_equal(generated_json):
+	if migrated.to_dictionary() != generated_json:
 		push_error("Python/Godot normalized Blueprint mismatch")
 		failures += 1
 
