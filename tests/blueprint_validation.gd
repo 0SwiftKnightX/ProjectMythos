@@ -76,15 +76,19 @@ func _validate_blueprint_migration_and_parity() -> int:
 
 func _validate_part_registry() -> int:
 	var failures := 0
-	for part_id in PartRegistry.PART_SCENES.keys():
+	for part_id in REQUIRED_SCENE_PATHS.keys():
 		if not PartRegistry.has_part(part_id):
 			push_error("Registry missing has_part() entry: %s" % part_id)
 			failures += 1
 		if not PartRegistry.is_valid_part_id(part_id):
 			push_error("Registry rejected valid part ID: %s" % part_id)
 			failures += 1
+		var expected_path := str(REQUIRED_SCENE_PATHS[part_id])
+		if not ResourceLoader.exists(expected_path, "PackedScene"):
+			push_error("Registered scene path is missing: %s" % expected_path)
+			failures += 1
 		var scene = PartRegistry.PART_SCENES[part_id]
-		if scene == null or not scene is PackedScene:
+		if scene == null or not (scene is PackedScene):
 			push_error("Registry scene is not a PackedScene: %s" % part_id)
 			failures += 1
 			continue
