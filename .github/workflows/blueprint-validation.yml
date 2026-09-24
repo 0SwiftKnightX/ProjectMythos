@@ -1,0 +1,43 @@
+name: Blueprint Validation
+
+on:
+  push:
+    paths:
+      - "scripts/blueprint/**"
+      - "scripts/build/**"
+      - "scripts/vehicles/**"
+      - "data/blueprints/**"
+      - "tools/generation/**"
+      - "tests/**"
+      - ".github/workflows/blueprint-validation.yml"
+  pull_request:
+    paths:
+      - "scripts/blueprint/**"
+      - "scripts/build/**"
+      - "scripts/vehicles/**"
+      - "data/blueprints/**"
+      - "tools/generation/**"
+      - "tests/**"
+      - ".github/workflows/blueprint-validation.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Blueprint contract and Godot validation
+    runs-on: ubuntu-24.04
+    container:
+      image: barichello/godot-ci:4.3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Validate Python contract
+        run: python3 tests/test_blueprint_contract.py
+
+      - name: Generate Python parity fixture
+        run: python3 tools/generation/blueprint_parity.py
+
+      - name: Run Godot headless validation
+        run: godot --headless --path . --script res://tests/blueprint_validation.gd
