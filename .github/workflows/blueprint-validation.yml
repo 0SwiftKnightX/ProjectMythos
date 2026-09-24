@@ -33,6 +33,11 @@ jobs:
         with:
           lfs: true
 
+      - name: Install Python
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends python3
+
       - name: Validate Python contract
         run: python3 tests/test_blueprint_contract.py
 
